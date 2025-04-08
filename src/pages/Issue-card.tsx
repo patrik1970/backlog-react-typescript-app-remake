@@ -38,6 +38,7 @@ const IssueCard = () => {
   }, []);
 
   const issueById = JSON.parse(JSON.stringify(data));
+  
 
   const saveChanges = () => {
     const updatedIssue = {
