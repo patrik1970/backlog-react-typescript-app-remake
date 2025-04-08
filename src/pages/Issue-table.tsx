@@ -12,6 +12,8 @@ import {
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
+import dayjs from "dayjs";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -57,7 +59,9 @@ const IssueTable = () => {
   }, []);
 
   return (
-    <TableContainer component={Paper}>
+    <>
+      <Header />
+      <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -77,10 +81,10 @@ const IssueTable = () => {
               <StyledTableCell>{issue.id}</StyledTableCell>
               <StyledTableCell>{issue.title}</StyledTableCell>
               <StyledTableCell>{issue.description}</StyledTableCell>
-              <StyledTableCell>{issue.priority}</StyledTableCell>
-              <StyledTableCell>{issue.issueType}</StyledTableCell>
-              <StyledTableCell>{issue.created}</StyledTableCell>
-              <StyledTableCell>{issue.completed}</StyledTableCell>  
+              <StyledTableCell>{issue.priority == "0" ? "Low" : issue.priority == "1" ? "Medium" : "High"}</StyledTableCell>
+              <StyledTableCell>{issue.issueType == "0" ? "Feature" : issue.issueType == "1" ? "Bugg" :  "Documentation" }</StyledTableCell>
+              <StyledTableCell>{dayjs(issue.created).format('YYYY-MM-DD') }</StyledTableCell>
+              <StyledTableCell>{dayjs(issue.completed).format('YYYY-MM-DD')}</StyledTableCell>  
               <StyledTableCell>
                 <ArrowForwardIcon onClick={() => { navigate("issue-card/?id=" + issue["id"]) }} />
               </StyledTableCell>
@@ -88,7 +92,8 @@ const IssueTable = () => {
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+      </TableContainer>
+    </>
   );
 }
 

@@ -5,7 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-const IssueCard = () => {
+const AddIssueCard = () => {
  
   const [data, setData] = useState([]);
   const navigate = useNavigate();
@@ -28,19 +28,19 @@ const IssueCard = () => {
     setCompletedDate(dayjs(issueById.completed));
   }, [data]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchData = async () => {
       const response = await fetch("https://localhost:7121/api/Issue/" + searchParams.get("id"));
       const data = await response.json();
       setData(data);
     };
     fetchData();
-  }, []);
+  }, []);*/
 
   const issueById = JSON.parse(JSON.stringify(data));
 
-  const saveChanges = () => {
-    const updatedIssue = {
+  const addIssueHandler = () => {
+    const addedIssue = {
       id: id,
       title: title,
       description: description,
@@ -50,43 +50,21 @@ const IssueCard = () => {
       completed: completedDate
     };
    
-    const updateIssue = async () => {
-      const response = await fetch("https://localhost:7121/api/Issue/" + id, {
-        method: "PUT",
+    const addIssue = async () => {
+      const response = await fetch("https://localhost:7121/api/Issue/", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(updatedIssue)
+        body: JSON.stringify(addedIssue)
       });
       if (response.ok) {
-        console.log('Issue updated successfully');
+        console.log('Issue added successfully');
       } else {
-        console.error('Error updating issue');
+        console.error('Error added issue');
       }
     }
-    updateIssue();
-    navigate(-1);
-  }
-
-  const deleteHandle = () => {
-    const issueToDelete = {
-      id: id,
-    }
-    const deleteIssue = async () => {
-      const response = await fetch("https://localhost:7121/api/Issue/" + id, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(issueToDelete)
-      });
-      if (response.ok) {
-        console.log('Issue deleted successfully');
-      } else {
-        console.error('Error deleting issue');
-      }
-    }
-    deleteIssue();
+    addIssue();
     navigate(-1);
   }
 
@@ -97,7 +75,7 @@ const IssueCard = () => {
           <TextField 
             label="Title"
             style={{ width: "100%" }}
-            value={title || ""}
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
             variant="outlined"
           />
@@ -106,12 +84,12 @@ const IssueCard = () => {
             <Select
               label="IssueType"
               style={{ width: "100%" }}
-              value={issueType || ""}
+              value={issueType}
               onChange={(e) => setIssueType(e.target.value)} 
             >
-              <MenuItem value={0}>Feature</MenuItem>
               <MenuItem value={1}>Bug</MenuItem>
-              <MenuItem value={2}>Documentation</MenuItem>
+              <MenuItem value={2}>Feature</MenuItem>
+              <MenuItem value={3}>Documentation</MenuItem>
             </Select>
           </FormControl>
           <FormControl fullWidth>
@@ -119,12 +97,12 @@ const IssueCard = () => {
             <Select
               label="Priority"
               style={{ width: "100%" }}
-              value={priority || ""}
+              value={priority}
               onChange={(e) => setPriority(e.target.value)}
             >
-              <MenuItem value={0}>Low</MenuItem>
-              <MenuItem value={1}>Medium</MenuItem>
-              <MenuItem value={2}>High</MenuItem>
+              <MenuItem value={1}>Low</MenuItem>
+              <MenuItem value={2}>Medium</MenuItem>
+              <MenuItem value={3}>High</MenuItem>
             </Select>
           </FormControl>
         </Stack>
@@ -134,7 +112,7 @@ const IssueCard = () => {
             style={{ width: "100%" }} 
             label="Description" 
             multiline
-            value={description || ""}
+            value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </Box>
@@ -144,7 +122,7 @@ const IssueCard = () => {
             <DatePicker
               label="Created"
               format="YYYY-MM-DD"
-              value={createdDate || null}
+              value={createdDate}
               onChange={(newValue) => { setCreatedDate(newValue);}}
               slotProps={{ textField: { style: { width: "100%" } } }}
             />
@@ -153,7 +131,7 @@ const IssueCard = () => {
             <DatePicker
               label="Completed"
               format="YYYY-MM-DD"
-              value={completedDate || null}
+              value={completedDate}
               onChange={(newValue) => { setCreatedDate(newValue);}}
               slotProps={{ textField: { style: { width: "100%" } } }}
             />
@@ -167,14 +145,8 @@ const IssueCard = () => {
           <Button 
             variant="outlined"
             style={{ width: "100%" }}
-            onClick={saveChanges}
-          > Save
-          </Button>
-          <Button 
-            variant="outlined"
-            style={{ width: "100%" }}
-            onClick={deleteHandle}
-          > Delete
+            onClick={addIssueHandler}
+          > Add
           </Button>
         </Stack>
       </CardContent>
@@ -182,4 +154,4 @@ const IssueCard = () => {
   );
 }
 
-export default IssueCard;
+export default AddIssueCard;
